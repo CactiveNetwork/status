@@ -4,7 +4,7 @@ import os from 'os';
 import config from './config';
 
 update_data();
-setInterval(() => update_data, 10000);
+setInterval(update_data, 10000);
 
 async function update_data(): Promise<void> {
 	pm2.list(async (error, processes) => {
@@ -13,7 +13,7 @@ async function update_data(): Promise<void> {
 		await phin({
 			url: 'https://status.cactive.network/data',
 			method: 'POST',
-			data: {
+			data: JSON.stringify({
 				server: os.hostname(),
 				processes: processes.map(process => ({
 					name: process.name,
@@ -25,10 +25,10 @@ async function update_data(): Promise<void> {
 						cpu: process.monit?.cpu ?? 0,
 					},
 				})),
-			},
+			}),
 			headers: {
-				authorization: config.token,
-				'content-type': 'application/json',
+				Authorization: config.token,
+				'Content-Type': 'application/json',
 			},
 		});
 	});
