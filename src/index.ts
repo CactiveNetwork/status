@@ -116,8 +116,9 @@ async function retrieve_logs(
 		initial = true;
 		normal_logs.set(output_location, { lines_count: null, lines_values: [] });
 		error_logs.set(error_location, { lines_count: null, lines_values: [] });
-		await listen(output_location, error_location);
 	}
+
+	await listen(output_location, error_location);
 
 	const normal_data = normal_logs.get(output_location),
 		error_data = error_logs.get(error_location);
@@ -165,8 +166,6 @@ async function update_data(): Promise<void> {
 				error_logs,
 			});
 		}
-
-		console.log(processes_data);
 
 		await phin({
 			url: 'https://status.cactive.network/data',
