@@ -160,8 +160,12 @@ async function update_data(): Promise<void> {
 					cpu: process.monit?.cpu ?? 0,
 				},
 				initial,
-				normal_logs,
-				error_logs,
+				normal_logs: config.normal_logs.limit_max_logs
+					? normal_logs.slice(-config.normal_logs.max_lines)
+					: normal_logs,
+				error_logs: config.error_logs.limit_max_logs
+					? error_logs.slice(-config.error_logs.max_lines)
+					: error_logs,
 			});
 		}
 
