@@ -17,7 +17,6 @@ let normal_logs: Map<string, LogData> = new Map();
 let error_logs: Map<string, LogData> = new Map();
 
 async function retrieve_lines(
-	retrieve_lines: boolean,
 	output_location: string,
 	error_location: string,
 ): Promise<[LogData, LogData]> {
@@ -49,11 +48,11 @@ async function retrieve_lines(
 			});
 
 		normal_interface.on('line', line => {
-			if (retrieve_lines) normal_values.push(line);
+			normal_values.push(line);
 			normal_lines++;
 		});
 		error_interface.on('line', line => {
-			if (retrieve_lines) normal_values.push(line);
+			normal_values.push(line);
 			error_lines++;
 		});
 
@@ -79,7 +78,6 @@ async function listen(
 		old_error_count = error_reference?.lines_count ?? 0;
 
 	const [new_normal, new_error] = await retrieve_lines(
-		true,
 		output_location,
 		error_location,
 	);
