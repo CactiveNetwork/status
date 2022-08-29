@@ -136,6 +136,8 @@ async function retrieve_logs(
 	return [normal_values, error_values, initial];
 }
 
+let latency: number | null = null;
+
 async function update_data(): Promise<void> {
 	pm2.list(async (error, processes) => {
 		if (error) return;
@@ -169,11 +171,13 @@ async function update_data(): Promise<void> {
 			});
 		}
 
+		const before = Date.now();
 		await phin({
 			url: 'https://status.cactive.network/data',
 			method: 'POST',
 			data: JSON.stringify({
 				server: os.hostname(),
+				latency,
 				processes: processes_data,
 			}),
 			headers: {
@@ -181,5 +185,7 @@ async function update_data(): Promise<void> {
 				'Content-Type': 'application/json',
 			},
 		});
+		const after = Date.now();
+		latency = after - before;
 	});
 }
